@@ -10,11 +10,9 @@ const authUser = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email });
 
-  // password bcrypt validation
-
   if (user && (await user.matchPassword(password))) {
     generateToken(res, user._id);
-    res.status(200).json({ // 200 or 201? (201 usually is used for CREATED)
+    res.status(201).json({ // 201? Woudn't be 200? (201 usually is used for CREATED)
       _id: user._id,
       name: user.name,
       email: user.email
@@ -62,7 +60,12 @@ const registerUser  = asyncHandler(async (req, res) => {
 // route POST /api/users/logout
 // @access Public
 const logoutUser  = asyncHandler(async (req, res) => {
-  res.status(200).json({message: "Logout User"});
+  res.cookie('jwt', '', {
+    httpOnly: true,
+    expires: new Date(0)
+  });
+
+  res.status(200).json({message: "User logged out"});
 });
 
 // @desc Get user profile
