@@ -4,6 +4,7 @@ import { Form, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLoginMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
+import { toast } from "react-toastify";
 
 import FormContainer from '../components/FormContainer'
 
@@ -30,8 +31,8 @@ const LoginScreen = () => {
       const res = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...res }));
       navigate('/');
-    } catch (error) {
-      console.log(err?.data?.message || err.error)
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
     }
   }
 
